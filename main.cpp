@@ -5,7 +5,6 @@
 
 #include <spdlog/spdlog.h>
 #include <chrono>
-#include <chrono>
 
 using namespace drogon;
 
@@ -24,25 +23,26 @@ int main(int argc, char** argv){
                     {
                         auto obj = req->jsonObject();
                         int type = obj->get("type", 0).asInt();
-                        int id = obj->get("type", 0).asInt();
-                        int value = obj->get("type", 0).asInt();
+                        int id = obj->get("id", 0).asInt();
+                        int value = obj->get("value", 0).asInt();
                         auto data = builder()
-                            .setType(Type::Button)
-                            ->setButtonId(i % 32)
-                            ->setValue(t % 2)
+                            .setType((Type)type)
+                            ->setButtonId((byte)id)
+                            ->setValue(value)
                             ->build();
                         
                         s.write(data.data(), data.size());
                         Json::Value json;
                         json["result"] = "ok";
                         json["message"] = s.read();
-                        json["body"] = data;
+                        json["body"] = std::string((char*)data.data());
 
                         auto resp=HttpResponse::newHttpJsonResponse(json);
                         callback(resp);
                     },
-                    {Post});
+                    {Post})
          .run();
+
     s.close();
     return 0;
 }   
