@@ -25,6 +25,8 @@ int main(int argc, char** argv){
         return 0;
     }    
 
+
+    spdlog::info("Test CURL CODE : \"curl --location http://127.0.0.1:80/serial --header 'Content-Type: application/json' --data {\\\"type\\\":3,\\\"id\\\":1,\\\"value\\\":1023}'\"");
             //                 STX   TYPE  ID  DATA01 02     03   04   CHK   ETX
 
     app().setLogPath("./")
@@ -35,27 +37,35 @@ int main(int argc, char** argv){
                     [&s](const HttpRequestPtr& req,
                        std::function<void (const HttpResponsePtr &)> &&callback)
                     {
-                        spdlog::info("{}", req->body());
-                        
-                        auto obj = req->jsonObject();
-                        int type = obj->get("type", 0).asInt();
-                        int id = obj->get("id", 0).asInt();
-                        int value = obj->get("value", 0).asInt();
-                        auto data = builder()
-                            .setType((Type)type)
-                            ->setButtonId((byte)id)
-                            ->setValue(value)
-                            ->build();
-                        
-                        s.write(data.data(), data.size());
-                        Json::Value json;
-                        json["result"] = "ok";
-                        json["message"] = s.read();
-                        json["body"] = std::string((char*)data.data());
-                        
-                        spdlog::info("{}", json.toStyledString());
-                        auto resp=HttpResponse::newHttpJsonResponse(json);
-                        callback(resp);
+                        try { 
+                            spdlog::info("{}", req->body());
+                            
+                            auto obj = req->jsonObject();
+                            int type = obj->get("type", 0).asInt();
+                            int id = obj->get("id", 0).asInt();
+                            int value = obj->get("value", 0).asInt();
+                            auto data = builder()
+                                .setType((Type)type)
+                                ->setButtonId((byte)id)
+                                ->setValue(value)
+                                ->build();
+                            
+                            s.write(data.data(), data.size());
+                            Json::Value json;
+                            json["result"] = "ok";
+                            json["message"] = s.read();
+                            json["body"] = std::string((char*)data.data());
+                            
+                            auto resp=HttpResponse::newHttpJsonResponse(json);
+                            callback(resp);
+                        }catch (std::exception e){ 
+                            spdlog::error("{}", e.what());
+                            Json::Value json;
+                            json["result"] = "error";
+                            json["message"] = e.what();
+                            auto resp=HttpResponse::newHttpJsonResponse(json);
+                            callback(resp);
+                        }
                     },
                     {Post})
          .run();

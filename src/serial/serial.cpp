@@ -32,7 +32,7 @@ void serial::close() {
 
 std::string serial::read() { 
     char text[256];
-    this->lib.readString(text, '\n', 20, 25);
+    this->lib.readString(text, '\n', 255, 25);
     spdlog::info(text);
     return std::string(text);
 }
