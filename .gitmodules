@@ -1,0 +1,3 @@
+[submodule "3rdparty/seriallib"]
+	path = 3rdparty/seriallib
+	url = https://github.com/imabot2/serialib
