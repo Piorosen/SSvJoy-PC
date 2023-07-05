@@ -16,7 +16,7 @@ int main(int argc, char** argv){
     app().setLogPath("./")
          .setLogLevel(trantor::Logger::kWarn)
          .addListener("0.0.0.0", 80)
-         .setThreadNum(std::thread::hardware_concurrency())
+         .setThreadNum(1) // 단일 쓰레드로 통해, 데이터 오류 발생을 최소화함.
          .registerHandler("/test",
                     [&s](const HttpRequestPtr& req,
                        std::function<void (const HttpResponsePtr &)> &&callback)
