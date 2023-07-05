@@ -5,12 +5,20 @@
 
 #include <spdlog/spdlog.h>
 #include <chrono>
+#include <cxxopts.hpp>
 
 using namespace drogon;
 
 int main(int argc, char** argv){ 
+    cxxopts::Options options("SSvJoy", "HTTP 통신으로 당신의 조이스틱을 제어합니다.");
+    options.add_options()
+        ("c,com", "Com Port", cxxopts::value<std::string>())
+        ("b,baudrate", "Baud Rate", cxxopts::value<int>()->default_value(115200))
+        ;
+    auto result = options.parse(argc, argv);
+
     serial s;
-    spdlog::info("open: {}", s.open(115200, "COM4"));
+    spdlog::info("open: {}", s.open(result["baudrate"].as<int>(), result["com"].as<std::string>()));
             //                 STX   TYPE  ID  DATA01 02     03   04   CHK   ETX
 
     app().setLogPath("./")
@@ -21,6 +29,8 @@ int main(int argc, char** argv){
                     [&s](const HttpRequestPtr& req,
                        std::function<void (const HttpResponsePtr &)> &&callback)
                     {
+                        spdlog::info("{}", req->body());
+                        
                         auto obj = req->jsonObject();
                         int type = obj->get("type", 0).asInt();
                         int id = obj->get("id", 0).asInt();
@@ -36,7 +46,8 @@ int main(int argc, char** argv){
                         json["result"] = "ok";
                         json["message"] = s.read();
                         json["body"] = std::string((char*)data.data());
-
+                        
+                        spdlog::info("{}", json.toStyledString());
                         auto resp=HttpResponse::newHttpJsonResponse(json);
                         callback(resp);
                     },
