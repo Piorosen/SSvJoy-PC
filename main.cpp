@@ -17,7 +17,7 @@ int main(int argc, char** argv){
          .setLogLevel(trantor::Logger::kWarn)
          .addListener("0.0.0.0", 80)
          .setThreadNum(1) // 단일 쓰레드로 통해, 데이터 오류 발생을 최소화함.
-         .registerHandler("/test",
+         .registerHandler("/serial",
                     [&s](const HttpRequestPtr& req,
                        std::function<void (const HttpResponsePtr &)> &&callback)
                     {
