@@ -7,7 +7,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED       ON)
 set(CMAKE_CXX_STANDARD_REQUIRED     ON)
 # Serial Port Linrary
-include_directories(${CMAKE_SOURCE_DIR}/3rdparty/serial/lib/)
+
+include_directories(${CMAKE_SOURCE_DIR}/3rdparty/seriallib/lib/)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 find_package(Drogon CONFIG REQUIRED)
@@ -16,6 +17,7 @@ find_package(spdlog CONFIG REQUIRED)
 
 add_executable(${PROJECT_NAME}
     main.cpp
+    src/serial/serial.cpp
 )
 
 add_library(seriallib STATIC 3rdparty/seriallib/lib/serialib.cpp)

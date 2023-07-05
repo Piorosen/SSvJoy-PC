@@ -1,6 +1,6 @@
-#include <vector>
 #include <string>
 #include <sstream>
+#include <vector>
 
 #include <serial/serial.h>
 #include <spdlog/spdlog.h>
@@ -32,51 +32,14 @@ void serial::close() {
 
 void serial::read() { 
     char text[256];
-    this->lib.readString(text, '#', 256);
-
-    int i;
-    for (i = 0; text[i] != '\0' && text[i - 1] != '$'; i++);
-
-    std::string data = &text[i];
-    if (data.length() == 0) { 
-        if (this->handler.error) { 
-            this->handler.error();
-            return;
-        }
-    }
-
-    if (this->handler.raw) { 
-        this->handler.raw(data);
-    }
-
-    data.pop_back();
-
-    auto spt = split(data, '@');
-    for (const auto& p : spt) {
-        spdlog::info("nyanyachacha!, {}", p);
-    }
-
-    if (this->handler.user_access && spt.size() == 3) { 
-        user_access result;
-        if (spt[0] == "true") { 
-            result.failure = false;
-        }else { 
-            result.failure = true;
-        }
-        result.user_name = spt[1];
-        result.user_id = spt[2];
-        this->handler.user_access(result);
-    }else if (spt.size() != 3){ 
-        spdlog::warn("user_access : [{}] size not matching", data);
-    }else if (!this->handler.user_access){ 
-        spdlog::warn("user_access : handler user access not join");
-    }
+    this->lib.readString(text, '\n', 20, 25);
+    spdlog::info(text);
 }
 
 int serial::write(std::string data) { 
     return this->lib.writeString(data.c_str());
 }
 
-event_handler* const serial::event() { 
-    return &this->handler;
+int serial::write(unsigned char* data, int size) { 
+    return this->lib.writeBytes(data, size);
 }
