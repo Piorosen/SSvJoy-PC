@@ -26,7 +26,7 @@ int main(int argc, char** argv){
     }    
 
 
-    spdlog::info("Test CURL CODE : \"curl --location http://127.0.0.1:80/serial --header 'Content-Type: application/json' --data {\\\"type\\\":3,\\\"id\\\":1,\\\"value\\\":1023}'\"");
+    spdlog::info("Test cURL CODE : \"curl --location http://127.0.0.1:80/serial --header Content-Type:application/json --data {\\\"type\\\":3,\\\"id\\\":1,\\\"value\\\":1023}\"");
             //                 STX   TYPE  ID  DATA01 02     03   04   CHK   ETX
 
     app().setLogPath("./")
