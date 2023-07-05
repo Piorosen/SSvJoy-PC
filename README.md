@@ -2,9 +2,9 @@
 
 ## API 관련 정보
 
-- [[BODY 중 type 값 의미]]()
-- [[BODY 중 id 값 의미]]()
-- [[BODY 중 value 값 의미]]()
+- [[BODY 중 type 값 의미]](/doc/type.md#type의-의미)
+- [[BODY 중 id 값 의미]](/doc/type.md#id의-의미)
+- [[BODY 중 value 값 의미]](/doc/type.md#value의-의미)
  
 ```
 METHOD: POST
@@ -12,13 +12,7 @@ BODY TYPE: JSON
 HTTP API PATH /serial 
 BODY Example:
 {"type":3, "id":1,"value":1023}
-
-
 ```
-
-
-
-
 
 # 어떻게 빌드 합니까?
 
