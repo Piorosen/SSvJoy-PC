@@ -57,12 +57,13 @@ public:
         return this;
     }
 
-    std::array<byte, sizeof(ParseResult) + 2> build() { 
+    std::array<byte, sizeof(ParseResult) + 3> build() { 
         data.checksum = compute_checksum();
-        std::array<byte, sizeof(ParseResult) + 2> arr;
+        std::array<byte, sizeof(ParseResult) + 3> arr;
         memcpy(arr.data() + 1, &data, sizeof(ParseResult));
         arr[0] = STX;
         arr[sizeof(ParseResult) + 1] = ETX;
+        arr[sizeof(ParseResult) + 2] = '\0';
         return arr;
     } 
 };

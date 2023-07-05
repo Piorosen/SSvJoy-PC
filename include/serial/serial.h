@@ -4,7 +4,6 @@
 #include <serialib.h>
 #include <string>
 #include <queue>
-#include <tuple>
 
 class serial { 
 private:
@@ -15,7 +14,7 @@ public:
     char open(int baudrate, std::string com);
     void close();
 
-    void read();
+    std::string read();
     int write(std::string);
     int write(unsigned char*, int);
 };

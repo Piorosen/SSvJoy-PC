@@ -30,10 +30,11 @@ void serial::close() {
     this->lib.closeDevice();
 }
 
-void serial::read() { 
+std::string serial::read() { 
     char text[256];
     this->lib.readString(text, '\n', 20, 25);
     spdlog::info(text);
+    return std::string(text);
 }
 
 int serial::write(std::string data) { 
